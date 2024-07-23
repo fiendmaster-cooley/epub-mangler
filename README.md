@@ -21,5 +21,7 @@ The user then generates a new epub with the new file contents.
 ## Run instructions
 Fork repository.
 Install `yarn`
-> `yarn start install`
-> `yarn start`
+```
+yarn start install
+yarn start
+```
