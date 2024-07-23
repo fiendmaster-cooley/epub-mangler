@@ -17,3 +17,9 @@ __This feature is only tested for about and also-by files.__
 The Epub Replacer loads an epub from the disk and provides the user the ability to upload their own `.xhtml` files for the `about-the-author` and `also-by` files in the `OEBPS` directory.
 The existing `also-by` and `about-the-author` file contents are replaced.
 The user then generates a new epub with the new file contents.
+
+## Run instructions
+Fork repository.
+Install `yarn`
+`yarn start install
+yarn start`
