@@ -7,7 +7,7 @@ interface EpubAppBarProps {
 }
 
 const EpubAppBar: FC<EpubAppBarProps> = ({ changeView }) => {
-  const [backdrop, setBackdrop] = useState<boolean>();
+  const [backdrop, setBackdrop] = useState<boolean>(true);
 
   const toggle = useCallback(() => {
     setBackdrop(!backdrop);
