@@ -1,7 +1,7 @@
 # epub-mangler
 Application for mangling epubs by renaming files and references, directly editing epub contents, and infinite regeneration of ebook files.
 
-## Applications
+## Modules
 Epub-Mangler consists of three modules which each perform a specific task.
 
 ### Epub Explorer
