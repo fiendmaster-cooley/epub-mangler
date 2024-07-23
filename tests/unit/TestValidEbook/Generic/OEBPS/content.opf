@@ -1,0 +1,79 @@
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="pub-id" version="2.0">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:title id="title">TestValidEbook</dc:title>
+    <dc:creator opf:file-as="Cooley, Paul E" opf:role="aut">Paul E Cooley</dc:creator>
+    <dc:language>en</dc:language>
+    <dc:identifier id="pub-id" opf:scheme="UUID">FA063282-3E10-4E82-AF2E-D199AE130225</dc:identifier>
+    <meta name="schema:accessMode"
+          content="textual" />
+    <meta name="schema:accessModeSufficient"
+          content="textual" />
+    <meta name="schema:accessibilityFeature"
+          content="structuralNavigation" />
+    <meta name="schema:accessibilityFeature"
+          content="tableOfContents" />
+    <meta name="schema:accessibilityFeature"
+          content="readingOrder" />
+    <meta name="schema:accessibilityHazard"
+          content="none" />
+    <meta name="schema:accessibilitySummary"
+          content="The structure and markup of this publication follow WCAG guidelines. This summary has been automatically generated based on the content of this publication." />
+    <meta name="generator"
+          content="Vellum" />
+    <meta name="vellum-version"
+          content="3.7.4" />
+    <meta name="vellum-target-platform"
+          content="Generic" />
+    <meta name="cover"
+          content="cover-image" />
+  </metadata>
+  <manifest>
+    <item id="greatvibes-regular-ttf"
+          href="fonts/GreatVibes-Regular.ttf"
+          media-type="application/font-sfnt" />
+    <item id="leaguegothic-regular-ttf"
+          href="fonts/LeagueGothic-Regular.ttf"
+          media-type="application/font-sfnt" />
+    <item id="ncx"
+          href="toc.ncx"
+          media-type="application/x-dtbncx+xml" />
+    <item id="title-page-xhtml"
+          href="title-page.xhtml"
+          media-type="application/xhtml+xml" />
+    <item id="contents-xhtml"
+          href="contents.xhtml"
+          media-type="application/xhtml+xml" />
+    <item id="about-the-author-xhtml"
+          href="about-the-author.xhtml"
+          media-type="application/xhtml+xml" />
+    <item id="also-by-xhtml"
+          href="also-by.xhtml"
+          media-type="application/xhtml+xml" />
+    <item id="chapter-001-xhtml"
+          href="chapter-001.xhtml"
+          media-type="application/xhtml+xml" />
+    <item id="media-css"
+          href="css/media.css"
+          media-type="text/css" />
+    <item id="style-css"
+          href="css/style.css"
+          media-type="text/css" />
+    <item id="sil-open-font-license-11-txt"
+          href="fonts/SIL-Open-Font-License-1.1.txt"
+          media-type="text/plain" />
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="title-page-xhtml" />
+    <itemref idref="contents-xhtml" />
+    <itemref idref="about-the-author-xhtml" />
+    <itemref idref="also-by-xhtml" />
+    <itemref idref="chapter-001-xhtml" />
+  </spine>
+  <guide>
+    <reference href="title-page.xhtml" title="Title Page" type="titlepage" />
+    <reference href="contents.xhtml" title="Contents" type="toc" />
+    <reference href="about-the-author.xhtml" title="About the author" type="z3998:biographical-note" />
+    <reference href="also-by.xhtml" title="Also by" type="z3998:published-works" />
+    <reference href="chapter-001.xhtml" title="Beginning" type="text" />
+  </guide>
+</package>
