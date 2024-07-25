@@ -1,4 +1,5 @@
 import {
+  Alert,
   AlertColor,
   Box,
   Button,
@@ -17,6 +18,8 @@ import EpubService from "../components/EpubService";
 import FileReplacer from "../components/FileReplacer";
 import FileUploader from "../components/FileUploader";
 import { useForm } from "react-hook-form";
+import AlertPanel from "../components/AlertPanel";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 interface EpubRenamerProps {}
 /**
@@ -27,17 +30,31 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
   const [epub, setEpub] = useState<Epub>();
   const [epubFile, setEpubFile] = useState<File>();
   const [currentZip, setCurrentZip] = useState<JSZipObject>();
-  const [alert, setAlert] = useState<EpubAlert>();
   const [newFileName, setNewFileName] = useState<string>();
   const [generateVisible, setGenerateVisible] = useState<boolean>();
   const [newEpubName, setNewEpubName] = useState<string>();
+  const [statusArray, setStatusArray] = useState<ReactJSXElement[]>([]);
   const { getValues } = useForm();
+
+  const addAlert = useCallback(
+    async (status: EpubAlert) => {
+      setStatusArray(
+        statusArray.concat([
+          <Alert title={status.alertTitle} severity={status.severity}>
+            {status.alertMessage}
+          </Alert>,
+        ]),
+      );
+    },
+    [statusArray, setStatusArray],
+  );
+
   const onSubmitHandler = useCallback(
     (data: any) => {
       setGenerateVisible(false);
       //there can be only one!
       if (data.files.length !== 1) {
-        setAlert({
+        addAlert({
           alertTitle: "Invalid File",
           alertMessage: "Choose a valid epub file.",
           severity: "error",
@@ -51,37 +68,14 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
             setEpubFile(file);
             setEpub(e);
           },
-          async (message: string) => {
-            let severity: AlertColor = "info";
-            if (message.toLowerCase().includes("error")) {
-              severity = "error";
-            } else if (message.toLowerCase().includes("success")) {
-              severity = "success";
-            }
-            setAlert({
-              alertMessage: message,
-              alertTitle: severity.toUpperCase(),
-              severity: severity,
-            });
+          async (message: EpubAlert) => {
+            addAlert(message);
           },
         );
       }
     },
-    [setAlert, setEpub, setEpubFile, setGenerateVisible],
+    [setEpub, setEpubFile, setGenerateVisible, addAlert],
   );
-
-  const getAlert = useCallback(() => {
-    if (alert) {
-      const handleClose = () => {
-        setAlert(undefined);
-      };
-      return (
-        <AlertSnackbar onCloseAlert={handleClose} open={true} {...alert} />
-      );
-    } else {
-      return <></>;
-    }
-  }, [alert, setAlert]);
 
   const handleItemCallback = useCallback(
     (e: JSZipObject) => {
@@ -94,7 +88,7 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
   const replaceFileSubmit = useCallback(async () => {
     console.debug("new file name:\t" + newFileName);
     if (!newFileName || !newFileName.endsWith(".xhtml")) {
-      setAlert({
+      addAlert({
         alertMessage: "File must be valid xhtml and name must end with '.epub'",
         alertTitle: "Error",
         severity: "error",
@@ -110,32 +104,32 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
 
     epub!.sourceZip = newEpub.sourceZip;
     setCurrentZip(epub?.sourceZip.file("OEBPS/" + newFileName)!);
-    setAlert({
+    addAlert({
       alertMessage: `Successfully renamed ${oldFileName} to ${newFileName}`,
       alertTitle: "Success",
       severity: "success",
     });
     setGenerateVisible(true);
-  }, [epub, currentZip, setAlert, newFileName]);
+  }, [epub, currentZip, addAlert, newFileName]);
 
   const handleGenerate = useCallback(async () => {
     //check to see if new epub name has .epub
     if (!newEpubName || !newEpubName.endsWith(".epub")) {
-      setAlert({
+      addAlert({
         alertMessage: "New epub name must with suffix '.epub'",
         alertTitle: "Error",
         severity: "error",
       });
       return;
     }
-    await EpubService.generateEpub(epub!, newEpubName!, (message: string) => {
-      setAlert({
-        alertMessage: message,
-        alertTitle: "Success",
-        severity: "success",
-      });
-    });
-  }, [epub, newEpubName, setAlert]);
+    await EpubService.generateEpub(
+      epub!,
+      newEpubName!,
+      (message: EpubAlert) => {
+        addAlert(message);
+      },
+    );
+  }, [epub, newEpubName, addAlert]);
 
   const handleNewEpubName = (e: any) => {
     setNewEpubName(e.target.value);
@@ -146,12 +140,12 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
     setNewFileName(undefined);
     setCurrentZip(undefined);
     setEpubFile(undefined);
-    setAlert(undefined);
+    setStatusArray([]);
   };
 
   return (
     <>
-      <Grid container spacing={1} columnGap={5} rowSpacing={5}>
+      <Grid container spacing={1} columnGap={5} rowSpacing={5} direction="row">
         <Grid item xs={12}>
           <FileUploader
             fieldName={"files"}
@@ -200,8 +194,10 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
             </Box>
           </Grid>
         )}
+        <Grid item>
+          <AlertPanel items={statusArray} />
+        </Grid>
       </Grid>
-      {getAlert()}
     </>
   );
 };

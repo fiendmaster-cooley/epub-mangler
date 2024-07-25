@@ -1,26 +1,42 @@
 import { FC } from "react";
 
-import { Box, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Paper,
+  Typography,
+} from "@mui/material";
 
 const AboutPanel: FC = () => {
   return (
-    <Box display={"flex"} alignItems={"center"}>
-      <CardContent style={{ backgroundColor: "whitesmoke" }}>
-        <Typography sx={{ fontSize: 14 }} color={"text.secondary"} gutterBottom>
-          About EpubMangler
-        </Typography>
-        <div>
-          {
-            "Paul E Cooley needed a way to update the 'about-the-author' and 'also-by' files inside multiple epubs."
-          }
-        </div>
-        <div>
-          {
-            "Epub mangler also allows you to rename individual files and generate new epubs."
-          }
-        </div>
-        <div>{"This IS a work in progress..."}</div>
-      </CardContent>
+    <Box
+      display={"flex"}
+      alignItems={"left"}
+      flexDirection={"column"}
+      component={"span"}
+      style={{ margin: "10" }}
+    >
+      <Card sx={{ backgroundColor: "primary.background" }}>
+        <CardContent>
+          <Typography sx={{ fontSize: 20 }} gutterBottom>
+            About EpubMangler
+          </Typography>
+
+          <Typography>
+            {
+              "Paul E Cooley needed a way to update the 'about-the-author' and 'also-by' files inside multiple epubs."
+            }
+          </Typography>
+          <Typography>
+            {
+              "Epub mangler also allows you to rename individual files and generate new epubs."
+            }
+          </Typography>
+          <Typography>{"This IS a work in progress..."}</Typography>
+        </CardContent>
+      </Card>
     </Box>
   );
 };

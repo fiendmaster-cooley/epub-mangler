@@ -2,18 +2,17 @@ import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import {
   Alert,
   AlertColor,
-  AlertTitle,
   Box,
   Button,
   Grid,
-  Snackbar,
-  Stack,
+  ListItem,
   TextField,
   Tooltip,
 } from "@mui/material";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "../App.css";
+import AlertPanel from "../components/AlertPanel";
 import EpubAlert from "../components/EpubAlert";
 import EpubService from "../components/EpubService";
 import FileUploader from "../components/FileUploader";
@@ -24,36 +23,33 @@ const EpubReplacer: FC = () => {
   const [epubFiles, setEpubFiles] = useState<File[]>([]);
   const watchAlso = watch("also", "");
   const watchAbout = watch("about", "");
-  const [snackbarContentArray, setSnackbarContentArray] = useState<
-    ReactJSXElement[]
-  >([]);
+  const [statusArray, setStatusArray] = useState<ReactJSXElement[]>([]);
+  const [statusQueue, setStatusQueue] = useState<ReactJSXElement>();
 
   const convertFileToString = useCallback(async (file: File) => {
     const result = await file.text();
     return result;
   }, []);
 
-  useEffect(() => {}, [getValues, convertFileToString]);
+  useEffect(() => {
+    if (statusQueue) {
+      console.debug(`Status queue:\t${statusQueue}`);
+      setStatusArray([...statusArray, statusQueue]);
+      setStatusQueue(undefined);
+    }
+  }, [statusArray, setStatusArray, setStatusQueue, statusQueue]);
 
   const addAlert = useCallback(
-    (alert: EpubAlert) => {
-      const al = (
-        <Alert
-          key={alert.alertMessage}
-          severity={alert.severity}
-          onClose={(e) => {
-            snackbarContentArray.pop();
-            setSnackbarContentArray(snackbarContentArray);
-          }}
-        >
-          <AlertTitle>{alert.alertTitle}</AlertTitle>
+    async (alert: EpubAlert) => {
+      const key = alert.alertMessage + statusArray.length;
+      const item = (
+        <Alert key={key} severity={alert.severity}>
           {alert.alertMessage}
         </Alert>
       );
-      const newArray = snackbarContentArray.concat([al]);
-      setSnackbarContentArray(newArray);
+      setStatusQueue(item);
     },
-    [snackbarContentArray, setSnackbarContentArray],
+    [statusArray, setStatusQueue],
   );
 
   /**
@@ -72,17 +68,14 @@ const EpubReplacer: FC = () => {
         xml: await convertFileToString(data.about[0]),
       };
 
-      EpubService.processEpubs(epubFiles, about, also, (message: string) => {
-        let severity: AlertColor = "info";
-        if (message.includes("error")) {
-          severity = "error";
-        }
-        addAlert({
-          alertMessage: message,
-          alertTitle: "Processor status",
-          severity: severity,
-        });
-      });
+      EpubService.processEpubs(
+        epubFiles,
+        about,
+        also,
+        (epubAlert: EpubAlert) => {
+          addAlert(epubAlert);
+        },
+      );
     },
     [convertFileToString, epubFiles, addAlert],
   );
@@ -91,31 +84,24 @@ const EpubReplacer: FC = () => {
     //reset the form..
     reset();
     setEpubFiles([]);
+    setStatusArray([]);
   };
 
   const onSubmitHandler = async (data: any) => {
     if (data.epubFile.length === 0) {
-      addAlert({
-        alertMessage: "Choose a valid epub",
-        alertTitle: "Invalid epub",
-        severity: "error",
-      });
+      alert("Choose a valid epub");
       return;
     } else {
       setEpubFiles(data.epubFile);
-      addAlert({
+      await addAlert({
         alertMessage: "Epubs chosen and references loaded",
         severity: "info",
         alertTitle: "Epubs loaded",
       });
     }
     console.debug(getValues());
-    //
   };
 
-  const getStack = useCallback(() => {
-    return <Stack>{snackbarContentArray}</Stack>;
-  }, [snackbarContentArray]);
   return (
     <Grid container rowSpacing={5}>
       <Grid item container direction={"row"}>
@@ -198,13 +184,8 @@ const EpubReplacer: FC = () => {
         </Grid>
       )}
 
-      <Grid item container>
-        <Snackbar
-          open={snackbarContentArray.length > 0}
-          autoHideDuration={6000}
-        >
-          <Stack>{getStack()}</Stack>
-        </Snackbar>
+      <Grid item width={600}>
+        <AlertPanel items={statusArray} />
       </Grid>
     </Grid>
   );
