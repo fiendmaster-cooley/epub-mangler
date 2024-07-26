@@ -6,12 +6,14 @@ import { List, ListItemButton, ListItemText } from "@mui/material";
 interface EpubContentsListProps {
   sourceZip: JSZip;
   selectCallback: Function;
+  xhtmlOnly?: boolean | false;
 }
 /**
  */
 const EpubContentsList: FC<EpubContentsListProps> = ({
   sourceZip,
   selectCallback,
+  xhtmlOnly,
 }) => {
   const handleCallback = useCallback(
     (evt: any, e: JSZipObject) => {
@@ -25,12 +27,14 @@ const EpubContentsList: FC<EpubContentsListProps> = ({
     const zipObjects: JSZipObject[] = [];
     sourceZip.forEach((relativePath: string, e: JSZipObject) => {
       if (
-        e.name.indexOf("OEBPS") === -1 ||
+        e.name.indexOf("OEBPS/") === -1 ||
         e.name.indexOf("OEBPS/css") === 0 ||
         e.name.indexOf("OEBPS/fonts") === 0 ||
         e.name.indexOf("OEBPS/images") === 0 ||
         e.name.localeCompare("OEBPS/") === 0
       ) {
+        return;
+      } else if (xhtmlOnly && !e.name.endsWith(".xhtml")) {
         return;
       } else {
         zipObjects.push(e);
