@@ -14,16 +14,14 @@ const EpubAppBar: FC<EpubAppBarProps> = ({ changeView }) => {
   }, [setBackdrop, backdrop]);
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" style={{ backgroundColor: "gray" }}>
+      <Box sx={{ flexGrow: 1, backgroundColor: "gray" }}>
+        <AppBar position="static">
           <Toolbar>
             <Button onClick={toggle}>About</Button>
           </Toolbar>
         </AppBar>
       </Box>
-      <Backdrop open={!backdrop} onClick={toggle}>
-        <AboutPanel />
-      </Backdrop>
+      {!backdrop && <AboutPanel />}
     </>
   );
 };

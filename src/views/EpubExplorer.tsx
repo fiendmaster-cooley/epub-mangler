@@ -1,7 +1,9 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import {
+  Alert,
   Box,
   Button,
   Dialog,
@@ -12,12 +14,13 @@ import {
   Grid,
 } from "@mui/material";
 import { JSZipObject } from "jszip";
-import AlertSnackbar, { AlertSnackbarProps } from "../components/AlertSnackbar";
+import AlertPanel from "../components/AlertPanel";
 import Epub from "../components/Epub";
+import EpubAlert from "../components/EpubAlert";
+import EpubContentsList from "../components/EpubContentsList";
 import EpubEditor from "../components/EpubEditor";
 import EpubService from "../components/EpubService";
 import FileUploader from "../components/FileUploader";
-import EpubContentsList from "../components/EpubContentsList";
 
 const EPUB_SUFFIX = "_generated_modified.epub";
 
@@ -32,18 +35,16 @@ const EpubExplorer: FC = () => {
   const watchFile = watch("epubFile", "");
   const [currentFile, setCurrentFile] = useState<JSZipObject>();
   const [parserError, setParserError] = useState<string>();
-  const [alertProps, setAlertProps] = useState<AlertSnackbarProps>({
-    open: false,
-    alertMessage: undefined,
-    alertTitle: undefined,
-    severity: "info",
-    onCloseAlert: () => {},
-  });
+  const [statusArray, setStatusArray] = useState<ReactJSXElement[]>([]);
   useEffect(() => {}, []);
 
   const onSubmitHandler = async (data: any) => {
     if (data.epubFile.length === 0) {
-      addMessage("Select a valid epub file", "Error", "error");
+      await addMessage({
+        alertMessage: "Select a valid epub file",
+        alertTitle: "Error",
+        severity: "error",
+      });
       return;
     }
     const file = data.epubFile[0];
@@ -53,8 +54,12 @@ const EpubExplorer: FC = () => {
         setEpubFile(file);
         setEpub(e);
       },
-      async (message: string) => {
-        addMessage(message);
+      async (message: EpubAlert) => {
+        await addMessage({
+          alertMessage: message.alertMessage,
+          alertTitle: message.alertTitle,
+          severity: message.severity,
+        });
       },
     );
     //
@@ -65,19 +70,11 @@ const EpubExplorer: FC = () => {
   };
 
   const addMessage = useCallback(
-    async (
-      message: string,
-      alertTitle?: string,
-      severity?: string | "info",
-    ) => {
-      const myProps: AlertSnackbarProps = { ...alertProps };
-      myProps.alertTitle = alertTitle;
-      myProps.severity = severity;
-      myProps.alertMessage = message;
-      myProps.open = true; //setAlertContent(message);
-      setAlertProps(myProps);
+    async (alert: EpubAlert) => {
+      const al = <Alert key={statusArray?.length}>{alert.alertMessage}</Alert>;
+      setStatusArray(statusArray.concat(al));
     },
-    [setAlertProps, alertProps],
+    [statusArray, setStatusArray],
   );
 
   const saveChanges = useCallback(
@@ -93,7 +90,11 @@ const EpubExplorer: FC = () => {
         const textNode = children.item(1);
 
         setParserError(textNode?.innerHTML);
-        addMessage(textNode?.innerHTML!, "Invalid xml", "error");
+        addMessage({
+          alertMessage: parserError!,
+          alertTitle: "Invalid xml",
+          severity: "error",
+        });
       }
 
       //throw new Error("Error parsing XML");
@@ -104,14 +105,14 @@ const EpubExplorer: FC = () => {
           xmlDoc,
           addMessage,
         );
-        await addMessage(
-          `Successfully replaced the file contents of ${currentFile!.name}.`,
-          "success",
-          "success",
-        );
+        await addMessage({
+          alertMessage: `Successfully replaced the file contents of ${currentFile!.name}.`,
+          alertTitle: "success",
+          severity: "success",
+        });
       }
     },
-    [currentFile, epub, addMessage],
+    [currentFile, epub, addMessage, parserError],
   );
 
   const generateEpub = useCallback(() => {
@@ -119,7 +120,7 @@ const EpubExplorer: FC = () => {
     EpubService.generateEpub(
       epub!,
       newName + EPUB_SUFFIX,
-      async (message: string) => {
+      async (message: EpubAlert) => {
         await addMessage(message);
       },
       //console.debug("Generated epub status:\t" + message);
@@ -138,20 +139,12 @@ const EpubExplorer: FC = () => {
     setParserError(undefined);
   };
 
-  const getAlert = useCallback(() => {
-    const handleClose = () => {
-      setAlertProps({ ...alertProps, open: false });
-    };
-    const myProps = { ...alertProps };
-    myProps.onCloseAlert = handleClose;
-    return <AlertSnackbar {...myProps} />;
-  }, [alertProps, setAlertProps]);
-
   const resetForms = useCallback(() => {
     setCurrentFile(undefined);
     setEpub(undefined);
     setEpubFile(undefined);
     setParserError(undefined);
+    setStatusArray([]);
     reset();
   }, [setCurrentFile, setEpub, setEpubFile, setParserError, reset]);
 
@@ -162,9 +155,8 @@ const EpubExplorer: FC = () => {
    */
   return (
     <>
-      {" "}
       <Grid rowSpacing={5} container direction={"row"}>
-        <Grid item direction={"row"}>
+        <Grid item>
           <Box display={"flex"}>
             <FileUploader
               fieldName="epubFile"
@@ -206,8 +198,10 @@ const EpubExplorer: FC = () => {
             </Grid>
           )}
         </Grid>
+        <Grid item width={600}>
+          <AlertPanel items={statusArray} />
+        </Grid>
       </Grid>
-      {getAlert()}
       <Dialog open={hasError()} onClose={handleClose}>
         <DialogTitle>Error while parsing file</DialogTitle>
         <DialogContent>

@@ -24,10 +24,12 @@ const EpubService = () => {
           base64: true,
         });
         const epub = await loaded;
+        await statusCallback({
+          alertMessage: `Successfully opened epub ${file.name} in memory...`,
+          severity: "succes",
+          alertTitle: "Success",
+        });
         await callBack(await this.createEpub(file.name, epub));
-        await statusCallback(
-          `Successfully opened epub ${file.name} in memory...`,
-        );
       });
       reader.readAsArrayBuffer(file);
     },
@@ -37,7 +39,11 @@ const EpubService = () => {
         .generateAsync({ type: "blob" })
         .then(async function (content) {
           FileSaver.saveAs(content, epubName);
-          await statusCallback("Successfully generated:\t" + epubName);
+          await statusCallback({
+            alertMessage: "Successfully generated:\t" + epubName,
+            alertTitle: "success",
+            severity: "success",
+          });
         });
     },
     async processEpubs(
@@ -59,10 +65,19 @@ const EpubService = () => {
       };
       checkNodeForError(xmlAbout);
       checkNodeForError(xmlAlso);
+      await statusCallback({
+        alertMessage: "Successfully parsed replacement files...",
+        alertTitle: "success",
+        severity: "success",
+      });
       const epubSuffix = "_generated_and_modified.epub";
-      await statusCallback("Processing " + epubs.length);
+      //await statusCallback("Processing " + epubs.length);
       for (let i = 0; i < epubs.length; i++) {
-        await statusCallback("Processing " + epubs[i].name);
+        await statusCallback({
+          alertMessage: "Processing " + epubs[i].name,
+          alertTitle: "info",
+          severity: "info",
+        });
         //create the epub
         const file = epubs[i];
         await this.openEpubFromBuffer(
@@ -86,10 +101,14 @@ const EpubService = () => {
               .then(function (content) {
                 FileSaver.saveAs(content, file.name + epubSuffix);
               });
+            await statusCallback({
+              alertMessage: `Finished processing ${file.name}`,
+              alertTitle: "success",
+              severity: "success",
+            });
           },
           statusCallback,
         );
-        await statusCallback("Generated file:\t" + file.name + epubSuffix);
       }
     },
     async replaceFile(
@@ -109,12 +128,18 @@ const EpubService = () => {
       });
       // should only be a single old here...
       if (olds.length === 0) {
-        await statusCallback(
-          `Could not find file ${fileName}`,
-          "Error",
-          "error",
-        );
+        await statusCallback({
+          alertMessage: `Could not find file ${fileName}.\nStopped processing`,
+          alertTitle: "Error",
+          severity: "error",
+        });
         return epub;
+      } else {
+        await statusCallback({
+          alertMessage: `Found replacement target...${fileName}`,
+          alertTitle: "success",
+          severity: "success",
+        });
       }
 
       epub.sourceZip.remove(olds[0].name);
@@ -211,6 +236,11 @@ const EpubService = () => {
             severity: "info",
           });
         }
+      });
+      await statusCallback({
+        alertMessage: "Finished replacing files...",
+        alertTitle: "success",
+        severity: "success",
       });
       return epub;
     },
