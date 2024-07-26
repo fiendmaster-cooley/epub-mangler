@@ -1,8 +1,11 @@
 import { Button, Grid } from "@mui/material";
 import { JSZipObject } from "jszip";
-import { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import "../App.css";
+import DraftJSEditor from "./DraftJSEditor";
 import Epub from "./Epub";
+import { EditorState, ContentState } from "draft-js";
+import "draft-js/dist/Draft.css";
 
 interface EpubEditorProps {
   epub: Epub;
@@ -18,15 +21,19 @@ const EpubEditor: FC<EpubEditorProps> = ({
 }) => {
   const [text, setText] = useState<string>();
   const [dirty, setDirty] = useState<boolean>();
+  const [editorState, setEditorState] = useState<EditorState>(
+    EditorState.createEmpty(),
+  );
   const setTextFromFile = useCallback(() => {
     const p = epub?.sourceZip?.file(file.name)?.async("string");
     if (p) {
       p.then((e) => {
-        setText(e);
+        const contentState = ContentState.createFromText(e);
+        setEditorState(EditorState.createWithContent(contentState));
         setDirty(false);
       });
     }
-  }, [epub, setText, setDirty, file]);
+  }, [epub, file, setDirty]);
 
   useEffect(() => {
     setTextFromFile();
@@ -38,10 +45,9 @@ const EpubEditor: FC<EpubEditorProps> = ({
     }
   }, [setTextFromFile, text]);
 
-  const onChangeText = (e: ChangeEvent) => {
-    //@ts-ignore
-    setText(e.target.value);
+  const onEditorStateChange = (change: EditorState) => {
     setDirty(true);
+    setEditorState(change);
   };
 
   const handleSave = (e: any) => {
@@ -57,9 +63,12 @@ const EpubEditor: FC<EpubEditorProps> = ({
   return (
     <>
       <Grid container>
-        <Grid item>{"File from zip:\t" + file.name}</Grid>
         <Grid item>
-          <textarea value={text} cols={75} rows={25} onChange={onChangeText} />
+          <DraftJSEditor
+            fileName={file.name}
+            editorState={editorState}
+            editorStateChange={onEditorStateChange}
+          />
         </Grid>
         <Grid item>
           {dirty && (

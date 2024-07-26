@@ -26,7 +26,7 @@ const EpubService = () => {
         const epub = await loaded;
         await statusCallback({
           alertMessage: `Successfully opened epub ${file.name} in memory...`,
-          severity: "succes",
+          severity: "success",
           alertTitle: "Success",
         });
         await callBack(await this.createEpub(file.name, epub));

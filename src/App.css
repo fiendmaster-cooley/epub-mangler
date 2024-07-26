@@ -15,12 +15,12 @@
 
 .App-header {
     background-color: #282c34;
-    min-height: 100vh;
+    min-height: 100;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
+    font-size: calc(5px + 2vmin);
     color: white;
 }
 
@@ -62,4 +62,33 @@ input {
     content: "";
     display: table;
     clear: both;
+}
+
+.Editor-header {
+    background-color: #282c34;
+    min-height: 5vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    margin-bottom: 5vh;
+    text-align: center;
+    padding: 12px;
+}
+
+.wrapper-class {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    height: 400px;
+    max-width: 500;
+    min-width: 200;
+}
+.editor-class {
+    padding: 1rem;
+    border: 1px solid #ccc;
+}
+.toolbar-class {
+    border: 1px solid #ccc;
 }
