@@ -19,7 +19,6 @@ const EpubEditor: FC<EpubEditorProps> = ({
   saveChanges,
   generateEpub,
 }) => {
-  const [text] = useState<string>();
   const [dirty, setDirty] = useState<boolean>();
   const [editorState, setEditorState] = useState<EditorState>(
     EditorState.createEmpty(),
@@ -40,10 +39,11 @@ const EpubEditor: FC<EpubEditorProps> = ({
   }, [file, setTextFromFile]);
 
   useEffect(() => {
-    if (!editorState.isEmpty) {
+    //@ts-ignore
+    if (editorState.isEmpty) {
       setTextFromFile();
     }
-  }, [setTextFromFile]);
+  }, [setTextFromFile, editorState]);
 
   const onEditorStateChange = (change: EditorState) => {
     setDirty(true);

@@ -1,13 +1,7 @@
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { Snackbar } from "@mui/base";
-import {
-  AppBar,
-  Box,
-  SnackbarContent,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { FC, ReactNode } from "react";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { FC } from "react";
 interface AlertPanelProps {
   items: ReactJSXElement[];
 }

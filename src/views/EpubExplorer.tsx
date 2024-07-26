@@ -1,9 +1,6 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
-import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import {
-  Alert,
   Box,
   Button,
   Dialog,
@@ -14,7 +11,6 @@ import {
   Grid,
 } from "@mui/material";
 import { JSZipObject } from "jszip";
-import AlertPanel from "../components/AlertPanel";
 import Epub from "../components/Epub";
 import EpubAlert from "../components/EpubAlert";
 import EpubContentsList from "../components/EpubContentsList";
@@ -36,7 +32,6 @@ const EpubExplorer: FC = () => {
   const watchFile = watch("epubFile", "");
   const [currentFile, setCurrentFile] = useState<JSZipObject>();
   const [parserError, setParserError] = useState<string>();
-  const [statusArray, setStatusArray] = useState<ReactJSXElement[]>([]);
   const [currentAlert, setCurrentAlert] = useState<EpubAlert>();
   useEffect(() => {}, []);
 
@@ -74,15 +69,9 @@ const EpubExplorer: FC = () => {
 
   const addMessage = useCallback(
     async (alert: EpubAlert) => {
-      const al = (
-        <Alert key={statusArray?.length} severity={alert.severity || "info"}>
-          {alert.alertMessage}
-        </Alert>
-      );
-
       setCurrentAlert(alert);
     },
-    [setCurrentAlert, statusArray],
+    [setCurrentAlert],
   );
 
   const saveChanges = useCallback(
@@ -152,7 +141,6 @@ const EpubExplorer: FC = () => {
     setEpub(undefined);
     setEpubFile(undefined);
     setParserError(undefined);
-    setStatusArray([]);
     reset();
   }, [setCurrentFile, setEpub, setEpubFile, setParserError, reset]);
 
