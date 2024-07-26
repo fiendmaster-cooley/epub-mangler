@@ -1,13 +1,6 @@
 import { FC } from "react";
 
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 
 const AboutPanel: FC = () => {
   return (

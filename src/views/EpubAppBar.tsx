@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from "react";
-import { AppBar, Box, Toolbar, Button, Backdrop } from "@mui/material";
+import { AppBar, Box, Toolbar, Button } from "@mui/material";
 import AboutPanel from "../components/AboutPanel";
 
 interface EpubAppBarProps {
