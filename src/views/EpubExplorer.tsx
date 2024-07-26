@@ -39,6 +39,7 @@ const EpubExplorer: FC = () => {
   useEffect(() => {}, []);
 
   const onSubmitHandler = async (data: any) => {
+    resetForms();
     if (data.epubFile.length === 0) {
       await addMessage({
         alertMessage: "Select a valid epub file",
@@ -71,7 +72,11 @@ const EpubExplorer: FC = () => {
 
   const addMessage = useCallback(
     async (alert: EpubAlert) => {
-      const al = <Alert key={statusArray?.length}>{alert.alertMessage}</Alert>;
+      const al = (
+        <Alert key={statusArray?.length} severity={alert.severity || "info"}>
+          {alert.alertMessage}
+        </Alert>
+      );
       setStatusArray(statusArray.concat(al));
     },
     [statusArray, setStatusArray],
@@ -91,7 +96,7 @@ const EpubExplorer: FC = () => {
 
         setParserError(textNode?.innerHTML);
         addMessage({
-          alertMessage: parserError!,
+          alertMessage: textNode?.innerHTML!,
           alertTitle: "Invalid xml",
           severity: "error",
         });
@@ -112,7 +117,7 @@ const EpubExplorer: FC = () => {
         });
       }
     },
-    [currentFile, epub, addMessage, parserError],
+    [currentFile, epub, addMessage],
   );
 
   const generateEpub = useCallback(() => {
