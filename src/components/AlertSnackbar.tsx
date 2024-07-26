@@ -1,33 +1,32 @@
 import React, { FC, PropsWithChildren } from "react";
 import { Snackbar } from "@mui/material";
 import { Alert, AlertTitle } from "@mui/material";
+import EpubAlert from "./EpubAlert";
 export interface AlertSnackbarProps {
-  alertTitle: string | undefined;
-  alertMessage: string | undefined;
+  alert: EpubAlert | undefined;
   open: boolean;
-  severity: any;
   onCloseAlert: Function;
 }
 const AlertSnackbar: FC<PropsWithChildren<AlertSnackbarProps>> = ({
-  alertTitle,
-  alertMessage,
+  alert,
   open,
-  severity,
   onCloseAlert,
   ...props
 }) => {
   if (open) {
     return (
-      <Snackbar
-        open={open}
-        onClose={() => onCloseAlert()}
-        autoHideDuration={6000}
-      >
-        <Alert severity={severity}>
-          <AlertTitle>{alertTitle}</AlertTitle>
-          <div>{alertMessage}</div>
-        </Alert>
-      </Snackbar>
+      <>
+        <Snackbar
+          open={open}
+          onClose={() => onCloseAlert()}
+          autoHideDuration={6000}
+        >
+          <Alert severity={alert?.severity}>
+            <AlertTitle>{alert?.alertTitle}</AlertTitle>
+            <div>{alert?.alertMessage}</div>
+          </Alert>
+        </Snackbar>
+      </>
     );
   } else {
     return <></>;

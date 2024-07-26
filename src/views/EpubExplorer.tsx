@@ -21,6 +21,7 @@ import EpubContentsList from "../components/EpubContentsList";
 import EpubEditor from "../components/EpubEditor";
 import EpubService from "../components/EpubService";
 import FileUploader from "../components/FileUploader";
+import AlertSnackbar from "../components/AlertSnackbar";
 
 const EPUB_SUFFIX = "_generated_modified.epub";
 
@@ -36,6 +37,7 @@ const EpubExplorer: FC = () => {
   const [currentFile, setCurrentFile] = useState<JSZipObject>();
   const [parserError, setParserError] = useState<string>();
   const [statusArray, setStatusArray] = useState<ReactJSXElement[]>([]);
+  const [currentAlert, setCurrentAlert] = useState<EpubAlert>();
   useEffect(() => {}, []);
 
   const onSubmitHandler = async (data: any) => {
@@ -77,9 +79,10 @@ const EpubExplorer: FC = () => {
           {alert.alertMessage}
         </Alert>
       );
-      setStatusArray(statusArray.concat(al));
+
+      setCurrentAlert(alert);
     },
-    [statusArray, setStatusArray],
+    [setCurrentAlert, statusArray],
   );
 
   const saveChanges = useCallback(
@@ -153,6 +156,10 @@ const EpubExplorer: FC = () => {
     reset();
   }, [setCurrentFile, setEpub, setEpubFile, setParserError, reset]);
 
+  const onCloseAlert = () => {
+    setCurrentAlert(undefined);
+  };
+
   /**
    * Select an epub.
    * Rename also/about (will require changing manifests and toc
@@ -203,7 +210,11 @@ const EpubExplorer: FC = () => {
           )}
         </Grid>
         <Grid item width={600}>
-          <AlertPanel items={statusArray} />
+          <AlertSnackbar
+            open={!!currentAlert}
+            alert={currentAlert}
+            onCloseAlert={onCloseAlert}
+          />
         </Grid>
       </Grid>
       <Dialog open={hasError()} onClose={handleClose}>

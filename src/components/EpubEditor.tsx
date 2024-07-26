@@ -40,10 +40,10 @@ const EpubEditor: FC<EpubEditorProps> = ({
   }, [file, setTextFromFile]);
 
   useEffect(() => {
-    if (!text) {
+    if (!editorState.isEmpty) {
       setTextFromFile();
     }
-  }, [setTextFromFile, text]);
+  }, [setTextFromFile]);
 
   const onEditorStateChange = (change: EditorState) => {
     setDirty(true);
@@ -52,7 +52,7 @@ const EpubEditor: FC<EpubEditorProps> = ({
 
   const handleSave = (e: any) => {
     console.debug("calling save!");
-    saveChanges(text);
+    saveChanges(editorState.getCurrentContent().getPlainText());
     setDirty(false);
   };
 
