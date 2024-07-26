@@ -1,9 +1,9 @@
 import React, { FC, useCallback, useState } from "react";
 import { AppBar, Box, Toolbar, Button } from "@mui/material";
 import AboutPanel from "../components/AboutPanel";
-
+import "../App.css";
 interface EpubAppBarProps {
-  changeView?: Function;
+  changeView?: (eventTargetValue: any) => void;
 }
 
 const EpubAppBar: FC<EpubAppBarProps> = ({ changeView }) => {
@@ -14,7 +14,7 @@ const EpubAppBar: FC<EpubAppBarProps> = ({ changeView }) => {
   }, [setBackdrop, backdrop]);
   return (
     <>
-      <Box sx={{ flexGrow: 1, backgroundColor: "gray" }}>
+      <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
             <Button onClick={toggle}>About</Button>

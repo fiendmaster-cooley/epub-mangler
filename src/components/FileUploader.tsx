@@ -2,11 +2,13 @@ import { Box, Button, Grid, Tooltip } from "@mui/material";
 import { FC } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import UploadButton from "./UploadButton";
+import { UseFormGetValues } from "react-hook-form";
+
 interface FileUploaderProps {
   submitHandler: SubmitHandler<FieldValues>;
   fieldName: string;
   title: string;
-  getValues: () => any;
+  getValues: UseFormGetValues<FieldValues>;
   resetParent: () => void;
 }
 const FileUploader: FC<FileUploaderProps> = ({

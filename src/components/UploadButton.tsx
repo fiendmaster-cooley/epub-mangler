@@ -8,7 +8,7 @@ import { Box, Tooltip } from "@mui/material";
 interface UploadButtonProps {
   fieldName: string;
   title: string;
-  theWatch: Function[]; //these are directly from useform. How to type?
+  theWatch: Function[];
   register: Function;
   multiple?: boolean;
   accept: string | ".xhtml";

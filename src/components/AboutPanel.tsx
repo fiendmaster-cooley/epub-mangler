@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 import { Box, Card, CardContent, Typography } from "@mui/material";
-
+import "../App.css";
 const AboutPanel: FC = () => {
   return (
     <Box
@@ -11,7 +11,7 @@ const AboutPanel: FC = () => {
       component={"span"}
       style={{ margin: "10" }}
     >
-      <Card sx={{ backgroundColor: "primary.background" }}>
+      <Card>
         <CardContent>
           <Typography sx={{ fontSize: 20 }} gutterBottom>
             About EpubMangler
