@@ -177,10 +177,9 @@ const EpubExplorer: FC = () => {
             )}
           </Box>
         </Grid>
-        <Grid item container direction={"row"}>
+        <Grid item container direction={"row"} columnSpacing={5}>
           {epub && epubFile && (
             <Grid item xs={3}>
-              {/*<EpubFiles epub={epub} selectCallback={selectCallback} />*/}
               <EpubContentsList
                 selectCallback={selectCallback}
                 sourceZip={epub.sourceZip}
@@ -188,7 +187,7 @@ const EpubExplorer: FC = () => {
             </Grid>
           )}
           {epub && currentFile && (
-            <Grid item xs={6}>
+            <Grid item xs={9}>
               <EpubEditor
                 epub={epub}
                 file={currentFile}

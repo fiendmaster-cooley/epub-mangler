@@ -43,6 +43,8 @@ const EpubContentsList: FC<EpubContentsListProps> = ({
     //now that we're finally sorted and whatnot
     return (
       <div>
+        <header>Epub Files</header>
+
         <List
           sx={{
             width: "100%",
@@ -50,7 +52,7 @@ const EpubContentsList: FC<EpubContentsListProps> = ({
             bgcolor: "background.paper",
             position: "relative",
             overflow: "auto",
-            maxHeight: 300,
+            maxHeight: 500,
             "& ul": { padding: 0 },
           }}
         >
