@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Grid, TextField, Tooltip } from "@mui/material";
+import { Box, Button, Grid, TextField, Tooltip } from "@mui/material";
 import { JSZipObject } from "jszip";
 import { FC, useCallback, useState } from "react";
 import "../App.css";
@@ -9,8 +9,7 @@ import EpubService from "../components/EpubService";
 import FileReplacer from "../components/FileReplacer";
 import FileUploader from "../components/FileUploader";
 import { useForm } from "react-hook-form";
-import AlertPanel from "../components/AlertPanel";
-import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import AlertSnackbar from "../components/AlertSnackbar";
 
 interface EpubRenamerProps {}
 /**
@@ -24,20 +23,14 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
   const [newFileName, setNewFileName] = useState<string>();
   const [generateVisible, setGenerateVisible] = useState<boolean>();
   const [newEpubName, setNewEpubName] = useState<string>();
-  const [statusArray, setStatusArray] = useState<ReactJSXElement[]>([]);
   const { getValues } = useForm();
+  const [epubAlert, setEpubAlert] = useState<EpubAlert>();
 
   const addAlert = useCallback(
     async (status: EpubAlert) => {
-      setStatusArray(
-        statusArray.concat([
-          <Alert title={status.alertTitle} severity={status.severity}>
-            {status.alertMessage}
-          </Alert>,
-        ]),
-      );
+      setEpubAlert(status);
     },
-    [statusArray, setStatusArray],
+    [setEpubAlert],
   );
 
   const onSubmitHandler = useCallback(
@@ -131,8 +124,11 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
     setNewFileName(undefined);
     setCurrentZip(undefined);
     setEpubFile(undefined);
-    setStatusArray([]);
   };
+
+  const onCloseAlert = useCallback(() => {
+    setEpubAlert(undefined);
+  }, []);
 
   return (
     <>
@@ -185,8 +181,12 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
             </Box>
           </Grid>
         )}
-        <Grid item width={600}>
-          <AlertPanel items={statusArray} />
+        <Grid item>
+          <AlertSnackbar
+            open={!!epubAlert}
+            alert={epubAlert}
+            onCloseAlert={onCloseAlert}
+          />
         </Grid>
       </Grid>
     </>
