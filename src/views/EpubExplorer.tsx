@@ -1,9 +1,6 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
-import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import {
-  Alert,
   Box,
   Button,
   Dialog,
@@ -14,13 +11,13 @@ import {
   Grid,
 } from "@mui/material";
 import { JSZipObject } from "jszip";
-import AlertPanel from "../components/AlertPanel";
 import Epub from "../components/Epub";
 import EpubAlert from "../components/EpubAlert";
 import EpubContentsList from "../components/EpubContentsList";
 import EpubEditor from "../components/EpubEditor";
 import EpubService from "../components/EpubService";
 import FileUploader from "../components/FileUploader";
+import AlertSnackbar from "../components/AlertSnackbar";
 
 const EPUB_SUFFIX = "_generated_modified.epub";
 
@@ -35,7 +32,7 @@ const EpubExplorer: FC = () => {
   const watchFile = watch("epubFile", "");
   const [currentFile, setCurrentFile] = useState<JSZipObject>();
   const [parserError, setParserError] = useState<string>();
-  const [statusArray, setStatusArray] = useState<ReactJSXElement[]>([]);
+  const [currentAlert, setCurrentAlert] = useState<EpubAlert>();
   useEffect(() => {}, []);
 
   const onSubmitHandler = async (data: any) => {
@@ -72,14 +69,9 @@ const EpubExplorer: FC = () => {
 
   const addMessage = useCallback(
     async (alert: EpubAlert) => {
-      const al = (
-        <Alert key={statusArray?.length} severity={alert.severity || "info"}>
-          {alert.alertMessage}
-        </Alert>
-      );
-      setStatusArray(statusArray.concat(al));
+      setCurrentAlert(alert);
     },
-    [statusArray, setStatusArray],
+    [setCurrentAlert],
   );
 
   const saveChanges = useCallback(
@@ -149,9 +141,12 @@ const EpubExplorer: FC = () => {
     setEpub(undefined);
     setEpubFile(undefined);
     setParserError(undefined);
-    setStatusArray([]);
     reset();
   }, [setCurrentFile, setEpub, setEpubFile, setParserError, reset]);
+
+  const onCloseAlert = () => {
+    setCurrentAlert(undefined);
+  };
 
   /**
    * Select an epub.
@@ -203,7 +198,11 @@ const EpubExplorer: FC = () => {
           )}
         </Grid>
         <Grid item width={600}>
-          <AlertPanel items={statusArray} />
+          <AlertSnackbar
+            open={!!currentAlert}
+            alert={currentAlert}
+            onCloseAlert={onCloseAlert}
+          />
         </Grid>
       </Grid>
       <Dialog open={hasError()} onClose={handleClose}>

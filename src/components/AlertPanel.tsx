@@ -1,7 +1,9 @@
-import { AppBar, Box, Stack, Toolbar, Typography } from "@mui/material";
-import { FC, ReactNode } from "react";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
+import { Snackbar } from "@mui/base";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { FC } from "react";
 interface AlertPanelProps {
-  items: ReactNode[];
+  items: ReactJSXElement[];
 }
 const AlertPanel: FC<AlertPanelProps> = ({ items, ...props }) => {
   return (
@@ -12,7 +14,9 @@ const AlertPanel: FC<AlertPanelProps> = ({ items, ...props }) => {
             <Typography>Processing Status</Typography>
           </Toolbar>
         </AppBar>
-        <Stack direction={"column"}>{items}</Stack>
+        <Snackbar open={items && items.length > 0} autoHideDuration={5 * 1000}>
+          {items}
+        </Snackbar>
       </Box>
     </>
   );
