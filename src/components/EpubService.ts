@@ -2,6 +2,7 @@ import JSZip from "jszip";
 import Epub, { SPEC_FILE_NAMES } from "./Epub";
 import ReplacementFile from "./ReplacementFile";
 import FileSaver from "file-saver";
+import EpubAlert from "./EpubAlert";
 const serializer = require("w3c-xmlserializer");
 
 const EpubService = () => {
@@ -13,10 +14,17 @@ const EpubService = () => {
         sourceZip: sourceZip,
       };
     },
+    /**
+     * Reads the file from the file system or a BufferArray
+     * and creates the sourceZip in memory.
+     * @param file the file handle to the source zip file.
+     * @param callback (epub)=>void
+     * @param statusCallback (EpubAlert)=>void
+     */
     async openEpubFromBuffer(
       file: File,
-      callBack: Function,
-      statusCallback: Function,
+      callBack: (epub: Epub) => Promise<void>,
+      statusCallback: (alert: EpubAlert) => Promise<void>,
     ) {
       const reader = new FileReader();
       reader.addEventListener("loadend", async (evt) => {
@@ -50,7 +58,7 @@ const EpubService = () => {
       epubs: File[],
       about: ReplacementFile,
       also: ReplacementFile,
-      statusCallback: Function,
+      statusCallback: (e: EpubAlert) => Promise<void>,
     ) {
       const parser = new DOMParser();
       const xmlAbout = parser.parseFromString(about.xml, "text/xml");

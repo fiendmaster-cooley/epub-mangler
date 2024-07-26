@@ -1,12 +1,19 @@
 import React, { useCallback } from "react";
 import { FC } from "react";
 import JSZip, { JSZipObject } from "jszip";
-import { List, ListItemButton, ListItemText } from "@mui/material";
+import { List, ListItemButton, ListItemText, Select } from "@mui/material";
 
+/**
+ * @param sourceZip the epub's zip property
+ * @param selectCallback Passes the iterated zip object
+ * @param xhtmlOnly only show files with the .xhtml extension
+ * @param asSelect renders the component as a select instead of a list.
+ */
 interface EpubContentsListProps {
   sourceZip: JSZip;
   selectCallback: (zip: JSZipObject) => void;
   xhtmlOnly?: boolean | false;
+  asSelect?: boolean | false;
 }
 /**
  */
@@ -14,6 +21,7 @@ const EpubContentsList: FC<EpubContentsListProps> = ({
   sourceZip,
   selectCallback,
   xhtmlOnly,
+  asSelect,
 }) => {
   const handleCallback = useCallback(
     (evt: any, e: JSZipObject) => {
@@ -44,22 +52,9 @@ const EpubContentsList: FC<EpubContentsListProps> = ({
       return a.name.localeCompare(b.name);
     });
 
-    //now that we're finally sorted and whatnot
-    return (
-      <div>
-        <header>Epub Files</header>
-
-        <List
-          sx={{
-            width: "100%",
-            maxWidth: 360,
-            bgcolor: "background.paper",
-            position: "relative",
-            overflow: "auto",
-            maxHeight: 500,
-            "& ul": { padding: 0 },
-          }}
-        >
+    const getEpubListItems: any = () => {
+      return (
+        <>
           {zipObjects.map((e) => {
             return (
               <ListItemButton
@@ -72,7 +67,31 @@ const EpubContentsList: FC<EpubContentsListProps> = ({
               </ListItemButton>
             );
           })}
-        </List>
+        </>
+      );
+    };
+
+    //now that we're finally sorted and whatnot
+    return (
+      <div>
+        <header>Epub Files</header>
+
+        {!asSelect && (
+          <List
+            sx={{
+              width: "100%",
+              maxWidth: 360,
+              bgcolor: "background.paper",
+              position: "relative",
+              overflow: "auto",
+              maxHeight: 500,
+              "& ul": { padding: 0 },
+            }}
+          >
+            {getEpubListItems()}
+          </List>
+        )}
+        {asSelect && <Select>{getEpubListItems()}</Select>}
       </div>
     );
   };

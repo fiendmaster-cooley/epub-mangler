@@ -48,7 +48,7 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
         setEpubFile(file);
         EpubService.openEpubFromBuffer(
           file,
-          (e: Epub) => {
+          async (e: Epub) => {
             setEpubFile(file);
             setEpub(e);
           },

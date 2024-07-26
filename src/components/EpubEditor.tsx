@@ -7,6 +7,13 @@ import Epub from "./Epub";
 import { EditorState, ContentState } from "draft-js";
 import "draft-js/dist/Draft.css";
 
+/**
+ * EpubEditor wraps the DraftJS editor and supplies the controlling logic.
+ * @param epub sourced object
+ * @param the current zipObject to work on
+ * @param raw output from the texteditor.
+ * @param function to generate the epub.
+ */
 interface EpubEditorProps {
   epub: Epub;
   file: JSZipObject;

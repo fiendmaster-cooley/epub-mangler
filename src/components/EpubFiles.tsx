@@ -7,6 +7,12 @@ import Epub from "./Epub";
 import Select from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
 import "../App.css";
+
+/**
+ * Displays a list of files inside the epub zip.
+ * @param selectCallback passes current zip object instance
+ * @param epub the source epub instance.
+ */
 interface EpubFilesProps {
   selectCallback: (theZip: JSZipObject) => void;
   epub: Epub;
@@ -51,7 +57,6 @@ const EpubFiles: FC<EpubFilesProps> = ({ selectCallback, epub }) => {
   };
   return (
     <>
-      {" "}
       <Box>
         <Select label={"Select a file"}>{renderRows()}</Select>
       </Box>

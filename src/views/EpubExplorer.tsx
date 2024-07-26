@@ -48,7 +48,7 @@ const EpubExplorer: FC = () => {
     const file = data.epubFile[0];
     EpubService.openEpubFromBuffer(
       file,
-      (e: Epub) => {
+      async (e: Epub) => {
         setEpubFile(file);
         setEpub(e);
       },

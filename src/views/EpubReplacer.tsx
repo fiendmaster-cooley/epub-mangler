@@ -63,7 +63,7 @@ const EpubReplacer: FC = () => {
         epubFiles,
         about,
         also,
-        (epubAlert: EpubAlert) => {
+        async (epubAlert: EpubAlert) => {
           addAlert(epubAlert);
         },
       );
