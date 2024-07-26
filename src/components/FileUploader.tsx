@@ -6,8 +6,8 @@ interface FileUploaderProps {
   submitHandler: SubmitHandler<FieldValues>;
   fieldName: string;
   title: string;
-  getValues: Function;
-  resetParent: Function;
+  getValues: () => any;
+  resetParent: () => void;
 }
 const FileUploader: FC<FileUploaderProps> = ({
   submitHandler,

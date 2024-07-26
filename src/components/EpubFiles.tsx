@@ -8,7 +8,7 @@ import Select from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
 import "../App.css";
 interface EpubFilesProps {
-  selectCallback: Function;
+  selectCallback: (theZip: JSZipObject) => void;
   epub: Epub;
 }
 

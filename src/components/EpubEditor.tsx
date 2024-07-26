@@ -10,8 +10,8 @@ import "draft-js/dist/Draft.css";
 interface EpubEditorProps {
   epub: Epub;
   file: JSZipObject;
-  saveChanges: Function;
-  generateEpub: Function;
+  saveChanges: (text: string) => void;
+  generateEpub: () => void;
 }
 const EpubEditor: FC<EpubEditorProps> = ({
   epub,

@@ -5,8 +5,8 @@ import { JSZipObject } from "jszip";
 
 interface FileReplacerProps {
   currentFile: JSZipObject;
-  submitter: Function;
-  setFileName: Function;
+  submitter: () => Promise<void>;
+  setFileName: (fileName: string) => void;
   newFileName: string | undefined;
 }
 

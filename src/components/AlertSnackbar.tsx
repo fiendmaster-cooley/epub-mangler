@@ -5,7 +5,7 @@ import EpubAlert from "./EpubAlert";
 export interface AlertSnackbarProps {
   alert: EpubAlert | undefined;
   open: boolean;
-  onCloseAlert: Function;
+  onCloseAlert: () => void;
 }
 const AlertSnackbar: FC<PropsWithChildren<AlertSnackbarProps>> = ({
   alert,

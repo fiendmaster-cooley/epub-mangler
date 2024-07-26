@@ -5,7 +5,7 @@ import { List, ListItemButton, ListItemText } from "@mui/material";
 
 interface EpubContentsListProps {
   sourceZip: JSZip;
-  selectCallback: Function;
+  selectCallback: (zip: JSZipObject) => void;
   xhtmlOnly?: boolean | false;
 }
 /**
