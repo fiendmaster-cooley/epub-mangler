@@ -19,7 +19,7 @@ const EpubEditor: FC<EpubEditorProps> = ({
   saveChanges,
   generateEpub,
 }) => {
-  const [text, setText] = useState<string>();
+  const [text] = useState<string>();
   const [dirty, setDirty] = useState<boolean>();
   const [editorState, setEditorState] = useState<EditorState>(
     EditorState.createEmpty(),
