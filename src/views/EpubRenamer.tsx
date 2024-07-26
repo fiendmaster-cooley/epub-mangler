@@ -194,7 +194,7 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
             </Box>
           </Grid>
         )}
-        <Grid item>
+        <Grid item width={600}>
           <AlertPanel items={statusArray} />
         </Grid>
       </Grid>

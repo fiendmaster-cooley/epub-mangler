@@ -165,7 +165,7 @@ const EpubReplacer: FC = () => {
         </Grid>
       )}
       {getValues("about") && getValues("about").length === 1 && (
-        <Grid item container direction={"row"} zeroMinWidth={true} xs={6}>
+        <Grid item container direction={"column"} zeroMinWidth={true} xs={6}>
           <Box display="flex" alignContent={"center"}>
             <Tooltip
               title={
@@ -177,7 +177,7 @@ const EpubReplacer: FC = () => {
                 value="Process epubs"
                 onClick={handleSubmit(process)}
               >
-                Process
+                Process Epubs
               </Button>
             </Tooltip>
           </Box>

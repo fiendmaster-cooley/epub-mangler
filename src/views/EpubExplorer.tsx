@@ -198,7 +198,7 @@ const EpubExplorer: FC = () => {
             </Grid>
           )}
         </Grid>
-        <Grid item>
+        <Grid item width={600}>
           <AlertPanel items={statusArray} />
         </Grid>
       </Grid>
