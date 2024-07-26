@@ -148,6 +148,7 @@ const EpubRenamer: FC<EpubRenamerProps> = ({ ...props }) => {
             <EpubContentsList
               sourceZip={epub!.sourceZip}
               selectCallback={handleItemCallback}
+              xhtmlOnly={true}
             />
           </Grid>
         )}
